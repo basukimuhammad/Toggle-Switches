@@ -398,13 +398,184 @@
                                 }
                             }
                         } else if (event.target === bug415) {
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Toggle Switches By Basuki</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        .switch-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-bottom: 10px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        #backgroundVideo {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="text-align: center; margin-bottom: 20px;">Toggle Switches</h2>
+
+    <div class="switch-container">
+        <label class="switch">
+            <input type="checkbox" id="bug415">
+            <span class="slider round"></span>
+        </label>Bug #415<br>
+        <label class="switch">
+            <input type="checkbox" id="bug416">
+            <span class="slider round"></span>
+        </label>Bug #416<br>
+        <label class="switch">
+            <input type="checkbox" id="bug417" checked>
+            <span class="slider round"></span>
+        </label>Bug #417<br>
+        <label class="switch">
+            <input type="checkbox" id="bug418">
+            <span class="slider round"></span>
+        </label>Bug #418<br>
+        <label class="switch">
+            <input type="checkbox" id="bug419">
+            <span class="slider round"></span>
+        </label>Bug #419<br>
+        <label class="switch">
+            <input type="checkbox" id="bug420">
+            <span class="slider round"></span>
+        </label>Bug #420<br>
+    </div>
+
+    <video id="backgroundVideo" autoplay loop>
+        <source id="videoSource" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const videoSource = document.getElementById('videoSource');
+            fetch('.env')
+                .then(response => response.text())
+                .then(text => {
+                    const env = text.split('\n').reduce((acc, line) => {
+                        const [key, value] = line.split('=');
+                        acc[key] = value;
+                        return acc;
+                    }, {});
+                    videoSource.src = env.VIDEO_URL;
+                    const backgroundVideo = document.getElementById('backgroundVideo');
+                    backgroundVideo.load();
+                    backgroundVideo.style.display = 'none';
+
+                    const bug415 = document.getElementById('bug415');
+                    const bug416 = document.getElementById('bug416');
+                    const bug417 = document.getElementById('bug417');
+                    const bug418 = document.getElementById('bug418');
+                    const bug419 = document.getElementById('bug419');
+                    const bug420 = document.getElementById('bug420');
+
+                    function updateSwitches(event) {
+                        if (event.target === bug417) {
+                            if (!bug417.checked) {
+                                bug415.checked = true;
+                                backgroundVideo.style.display = 'block';
+                                backgroundVideo.play();
+                            } else {
+                                if (!bug415.checked && !bug416.checked && !bug418.checked && !bug419.checked && !bug420.checked) {
+                                    backgroundVideo.pause();
+                                    backgroundVideo.currentTime = 0;
+                                    backgroundVideo.style.display = 'none';
+                                }
+                            }
+                        } else if (event.target === bug415) {
                             if (!bug415.checked) {
                                 bug417.checked = true;
                                 bug418.checked = true;
                             } else {
                                 bug419.checked = true;
                                 bug420.checked = true;
-                      }
+                            }
                         } else if (event.target === bug418 || event.target === bug419 || event.target === bug420) {
                             if (!bug418.checked || !bug419.checked || !bug420.checked) {
                                 bug417.checked = true;
@@ -430,3 +601,30 @@
                 if (e.ctrlKey && e.shiftKey && e.keyCode == 74) { 
                     disabledEvent(e); 
                 } 
+                if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) { 
+                    disabledEvent(e); 
+                } 
+                if (e.ctrlKey && e.keyCode == 85) { 
+                    disabledEvent(e); 
+                } 
+                if (e.keyCode == 123) { 
+                    disabledEvent(e); 
+                } 
+                if (e.ctrlKey && e.keyCode == 67) { 
+                    disabledEvent(e); 
+                } 
+            }, false); 
+            
+            function disabledEvent(e) { 
+                if (e.stopPropagation) { 
+                    e.stopPropagation(); 
+                } else if (window.event) { 
+                    window.event.cancelBubble = true; 
+                } 
+                e.preventDefault(); 
+                return false; 
+            }
+        });
+    </script>
+</body>
+</html>
